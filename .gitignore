@@ -1,0 +1,4 @@
+*.d
+*.o
+esp_client
+esp_server
