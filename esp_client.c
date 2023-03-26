@@ -16,7 +16,7 @@
 #include "esp.h"
 
 #ifndef DEFAULT_SERVER
-# define DEFAULT_SERVER "::1"
+#define DEFAULT_SERVER "::1"
 #endif
 
 #define DEFAULT_TIMEOUT_BEGIN 10
@@ -85,7 +85,7 @@ void run() {
   short timeout_max;
   short timeout;
 
-  sd = socket(AF_INET6, SOCK_DGRAM, 0);
+  sd = socket(AF_INET6, SOCK_RAW, PROTO_ESP);
   if (sd == -1) {
     perror("socket");
     exit(EXIT_FAILURE);
@@ -102,7 +102,6 @@ void run() {
 
   memset(&server_address, 0, sizeof(server_address));
   server_address.sin6_family = AF_INET6;
-  server_address.sin6_port = htons(5000);
 
   if (1 != inet_pton(AF_INET6, server, &(server_address.sin6_addr))) {
     perror("inet_pton");

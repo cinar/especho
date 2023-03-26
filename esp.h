@@ -7,6 +7,10 @@
  * https://github.com/cinar/especho
  */ 
 
+#ifndef PROTO_ESP
+# define PROTO_ESP 50
+#endif
+
 struct esp_packet {
   int spi;
   int seq;

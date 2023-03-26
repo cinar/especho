@@ -27,7 +27,7 @@ void run() {
   struct sockaddr_in6 server_address;
   int sd;
 
-  sd = socket(AF_INET6, SOCK_DGRAM, 0);
+  sd = socket(AF_INET6, SOCK_RAW, PROTO_ESP);
   if (sd == -1) {
     perror("socket");
     exit(EXIT_FAILURE);
@@ -35,7 +35,6 @@ void run() {
 
   memset(&server_address, 0, sizeof(server_address));
   server_address.sin6_family = AF_INET6;
-  server_address.sin6_port = htons(5000);
 
   if (-1 == bind(sd, (const struct sockaddr *)&server_address,
                  sizeof(server_address))) {
