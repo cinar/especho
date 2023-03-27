@@ -5,10 +5,10 @@
  * The source code is provided under MIT License.
  *
  * https://github.com/cinar/especho
- */ 
+ */
 
 #ifndef PROTO_ESP
-# define PROTO_ESP 50
+#define PROTO_ESP 50
 #endif
 
 struct esp_packet {
@@ -18,4 +18,3 @@ struct esp_packet {
   char pad;
   char next;
 };
-

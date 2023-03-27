@@ -6,13 +6,14 @@
 CPPFLAGS += -MD -MP
 
 SRC = $(wildcard *.c)
+HDR = $(wildcard *.h)
 DEP = $(SRC:%.c=%.d)
 BIN = esp_server esp_client
 
 all: $(BIN)
 
 fix:
-	clang-format -i $(SRC)
+	clang-format -i $(SRC) $(HDR)
 
 clean:
 	rm $(BIN)
