@@ -75,10 +75,13 @@ void run() {
         perror("fork");
         exit(EXIT_FAILURE);
       } else if (0 == pid) {
+        short timeout = ntohs(packet.timeout);
+
         fprintf(stderr, "[Client %s] Requested %d seconds timeout.\n", client,
-                packet.timeout);
-        sleep(packet.timeout);
-        packet.seq = 1;
+                timeout);
+        sleep(timeout);
+
+        packet.seq = htonl(2);
 
         fprintf(stderr, "[Client %s] Responding back.\n", client);
         size = sendto(sd, &packet, sizeof(packet), 0,

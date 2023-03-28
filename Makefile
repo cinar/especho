@@ -16,7 +16,7 @@ fix:
 	clang-format -i $(SRC) $(HDR)
 
 clean:
-	rm $(BIN)
-	rm $(DEP)
+	-rm $(BIN)
+	-rm $(DEP)
 
 -include $(DEP)

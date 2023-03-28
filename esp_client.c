@@ -113,9 +113,9 @@ void run() {
   for (timeout = timeout_end; timeout >= timeout_begin;
        timeout -= timeout_increment) {
     memset(&packet, 0, sizeof(packet));
-    packet.spi = 1;
-    packet.seq = 0;
-    packet.timeout = timeout;
+    packet.spi = htonl(2023);
+    packet.seq = htonl(1);
+    packet.timeout = htons(timeout);
 
     size = sendto(sd, &packet, sizeof(packet), 0,
                   (const struct sockaddr *)&server_address,
