@@ -3,11 +3,11 @@
 #
 # https://github.com/cinar/especho
 
-CPPFLAGS += -MD -MP
+LDFLAGS += -static
 
 SRC = $(wildcard *.c)
 HDR = $(wildcard *.h)
-DEP = $(SRC:%.c=%.d)
+OBJ = $(SRC:%.c=%.o)
 BIN = esp_server esp_client
 
 all: $(BIN)
@@ -17,6 +17,4 @@ fix:
 
 clean:
 	-rm $(BIN)
-	-rm $(DEP)
-
--include $(DEP)
+	-rm $(OBJ)
