@@ -18,6 +18,7 @@
 #define DEFAULT_SERVER "::"
 
 char *server = NULL;
+int protocol = IPPROTO_ESP;
 
 void parse_opts(int argc, char **argv);
 void run();
@@ -33,10 +34,14 @@ int main(int argc, char **argv) {
 void parse_opts(int argc, char **argv) {
   int opt;
 
-  while (-1 != (opt = getopt(argc, argv, "s:"))) {
+  while (-1 != (opt = getopt(argc, argv, "s:p:"))) {
     switch (opt) {
     case 's':
       server = strdup(optarg);
+      break;
+
+    case 'p':
+      protocol = atoi(optarg);
       break;
 
     default:
@@ -54,7 +59,7 @@ void run() {
   struct sockaddr_in6 server_address;
   int sd;
 
-  sd = socket(AF_INET6, SOCK_RAW, PROTO_ESP);
+  sd = socket(AF_INET6, SOCK_RAW, protocol);
   if (sd == -1) {
     perror("socket");
     exit(EXIT_FAILURE);
@@ -62,6 +67,7 @@ void run() {
 
   memset(&server_address, 0, sizeof(server_address));
   server_address.sin6_family = AF_INET6;
+  server_address.sin6_port = htons(protocol);
 
   if (1 != inet_pton(AF_INET6, server, &(server_address.sin6_addr))) {
     perror("inet_pton");

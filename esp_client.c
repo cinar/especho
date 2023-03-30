@@ -26,6 +26,7 @@
 
 char *server = NULL;
 char *client = NULL;
+int protocol = IPPROTO_ESP;
 short timeout_begin = DEFAULT_TIMEOUT_BEGIN;
 short timeout_end = DEFAULT_TIMEOUT_END;
 short timeout_increment = DEFAULT_TIMEOUT_INCREMENT;
@@ -47,7 +48,7 @@ int main(int argc, char **argv) {
 void parse_opts(int argc, char **argv) {
   int opt;
 
-  while (-1 != (opt = getopt(argc, argv, "s:c:b:e:i:"))) {
+  while (-1 != (opt = getopt(argc, argv, "s:c:p:b:e:i:"))) {
     switch (opt) {
     case 's':
       server = strdup(optarg);
@@ -55,6 +56,10 @@ void parse_opts(int argc, char **argv) {
 
     case 'c':
       client = strdup(optarg);
+      break;
+
+    case 'p':
+      protocol = atoi(optarg);
       break;
 
     case 'b':
@@ -71,7 +76,7 @@ void parse_opts(int argc, char **argv) {
 
     default:
       fprintf(stderr,
-              "Usage: %s [-s server] [-c client] [-b begin] [-e end] [-i "
+              "Usage: %s [-s server] [-c client] [-p protocol] [-b begin] [-e end] [-i "
               "increment]\n",
               argv[0]);
       exit(EXIT_FAILURE);
@@ -97,7 +102,7 @@ void run() {
   short timeout_max;
   short timeout;
 
-  sd = socket(AF_INET6, SOCK_RAW, PROTO_ESP);
+  sd = socket(AF_INET6, SOCK_RAW, protocol);
   if (sd == -1) {
     perror("socket");
     exit(EXIT_FAILURE);
@@ -105,6 +110,7 @@ void run() {
 
   memset(&client_address, 0, sizeof(client_address));
   client_address.sin6_family = AF_INET6;
+  client_address.sin6_port = htons(protocol);
 
   if (1 != inet_pton(AF_INET6, client, &(client_address.sin6_addr))) {
     perror("inet_pton");
