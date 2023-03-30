@@ -19,11 +19,13 @@
 #define DEFAULT_SERVER "::1"
 #endif
 
+#define DEFAULT_CLIENT "::"
 #define DEFAULT_TIMEOUT_BEGIN 10
 #define DEFAULT_TIMEOUT_END 600
 #define DEFAULT_TIMEOUT_INCREMENT 10
 
 char *server = NULL;
+char *client = NULL;
 short timeout_begin = DEFAULT_TIMEOUT_BEGIN;
 short timeout_end = DEFAULT_TIMEOUT_END;
 short timeout_increment = DEFAULT_TIMEOUT_INCREMENT;
@@ -37,6 +39,7 @@ int main(int argc, char **argv) {
           timeout_begin, timeout_end, timeout_increment);
   run();
   free(server);
+  free(client);
 
   return EXIT_SUCCESS;
 }
@@ -44,10 +47,14 @@ int main(int argc, char **argv) {
 void parse_opts(int argc, char **argv) {
   int opt;
 
-  while (-1 != (opt = getopt(argc, argv, "s:b:e:i:"))) {
+  while (-1 != (opt = getopt(argc, argv, "s:c:b:e:i:"))) {
     switch (opt) {
     case 's':
       server = strdup(optarg);
+      break;
+
+    case 'c':
+      client = strdup(optarg);
       break;
 
     case 'b':
@@ -64,7 +71,8 @@ void parse_opts(int argc, char **argv) {
 
     default:
       fprintf(stderr,
-              "Usage: %s [-6] [-s server] [-b begin] [-e end] [-i increment]\n",
+              "Usage: %s [-s server] [-c client] [-b begin] [-e end] [-i "
+              "increment]\n",
               argv[0]);
       exit(EXIT_FAILURE);
     }
@@ -72,6 +80,10 @@ void parse_opts(int argc, char **argv) {
 
   if (NULL == server) {
     server = strdup(DEFAULT_SERVER);
+  }
+
+  if (NULL == client) {
+    client = strdup(DEFAULT_CLIENT);
   }
 }
 
@@ -93,6 +105,11 @@ void run() {
 
   memset(&client_address, 0, sizeof(client_address));
   client_address.sin6_family = AF_INET6;
+
+  if (1 != inet_pton(AF_INET6, client, &(client_address.sin6_addr))) {
+    perror("inet_pton");
+    exit(EXIT_FAILURE);
+  }
 
   if (-1 == bind(sd, (const struct sockaddr *)&client_address,
                  sizeof(client_address))) {

@@ -15,12 +15,39 @@
 
 #include "esp.h"
 
+#define DEFAULT_SERVER "::"
+
+char *server = NULL;
+
+void parse_opts(int argc, char **argv);
 void run();
 
 int main(int argc, char **argv) {
+  parse_opts(argc, argv);
   run();
+  free(server);
 
   return EXIT_SUCCESS;
+}
+
+void parse_opts(int argc, char **argv) {
+  int opt;
+
+  while (-1 != (opt = getopt(argc, argv, "s:"))) {
+    switch (opt) {
+    case 's':
+      server = strdup(optarg);
+      break;
+
+    default:
+      fprintf(stderr, "Usage: %s [-s server]\n", argv[0]);
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  if (NULL == server) {
+    server = strdup(DEFAULT_SERVER);
+  }
 }
 
 void run() {
@@ -35,6 +62,11 @@ void run() {
 
   memset(&server_address, 0, sizeof(server_address));
   server_address.sin6_family = AF_INET6;
+
+  if (1 != inet_pton(AF_INET6, server, &(server_address.sin6_addr))) {
+    perror("inet_pton");
+    exit(EXIT_FAILURE);
+  }
 
   if (-1 == bind(sd, (const struct sockaddr *)&server_address,
                  sizeof(server_address))) {
