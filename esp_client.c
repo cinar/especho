@@ -32,7 +32,7 @@ short timeout_end = DEFAULT_TIMEOUT_END;
 short timeout_increment = DEFAULT_TIMEOUT_INCREMENT;
 
 void parse_opts(int argc, char **argv);
-void run();
+void run(void);
 
 int main(int argc, char **argv) {
   parse_opts(argc, argv);
@@ -76,7 +76,8 @@ void parse_opts(int argc, char **argv) {
 
     default:
       fprintf(stderr,
-              "Usage: %s [-s server] [-c client] [-p protocol] [-b begin] [-e end] [-i "
+              "Usage: %s [-s server] [-c client] [-p protocol] [-b begin] [-e "
+              "end] [-i "
               "increment]\n",
               argv[0]);
       exit(EXIT_FAILURE);

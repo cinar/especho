@@ -3,6 +3,7 @@
 #
 # https://github.com/cinar/especho
 
+CFLAGS += -W -Wall -Wundef -Wstrict-prototypes -O2
 LDFLAGS += -static
 
 SRC = $(wildcard *.c)

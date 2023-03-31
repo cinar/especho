@@ -21,7 +21,7 @@ char *server = NULL;
 int protocol = IPPROTO_ESP;
 
 void parse_opts(int argc, char **argv);
-void run();
+void run(void);
 
 int main(int argc, char **argv) {
   parse_opts(argc, argv);
