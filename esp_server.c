@@ -45,7 +45,7 @@ void parse_opts(int argc, char **argv) {
       break;
 
     default:
-      fprintf(stderr, "Usage: %s [-s server]\n", argv[0]);
+      fprintf(stderr, "Usage: %s [-s server] [-p protocol]\n", argv[0]);
       exit(EXIT_FAILURE);
     }
   }
